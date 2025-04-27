@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Санкционные списки</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background: #f9f9f9; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; }
+        th { background-color: #333; color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+        form { margin-bottom: 20px; }
+        input, select { padding: 6px 10px; margin-right: 10px; }
+        .top-links { margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <h1>📄 Санкционные списки</h1>
+
+    <div class="top-links">
+        <a href="/logs">📜 Смотреть логи</a>
+    </div>
+
+    <form method="get">
+        <label>Страна:</label>
+        <input type="text" name="country" value="{{ request.query_params.get('country', '') }}">
+        <label>Источник:</label>
+        <select name="source">
+            <option value="">Все</option>
+            <option value="US" {% if request.query_params.get('source') == 'US' %}selected{% endif %}>US</option>
+            <option value="UK" {% if request.query_params.get('source') == 'UK' %}selected{% endif %}>UK</option>
+        </select>
+        <button type="submit">🔍 Поиск</button>
+    </form>
+
+    {% if records %}
+        <table>
+            <tr>
+                <th>Имя</th>
+                <th>Страна</th>
+                <th>Дата</th>
+                <th>Источник</th>
+            </tr>
+            {% for record in records %}
+                <tr>
+                    <td>{{ record["Name"] }}</td>
+                    <td>{{ record["Country"] }}</td>
+                    <td>{{ record.get("Date", "—") }}</td>
+                    <td>{{ record["Source"] }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>Нет данных.</p>
+    {% endif %}
+</body>
+</html>
